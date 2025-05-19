@@ -2,6 +2,7 @@ import pyperclip
 import time
 import pyautogui
 import subprocess
+import shutil
 import os
 
 def copyPaste(text,x,y):
@@ -13,7 +14,7 @@ def copyPaste(text,x,y):
     time.sleep(sleeping_time)
     pyautogui.hotkey('ctrl', 'v')
 
-input_path = r"Z:\Proyectos de programación\Python\Bolsa\Firmar\Entrada/"
+input_path = r"Z:\Proyectos de programación\Python\Bolsa\Firmar\Entrada\\"
 
 files = os.listdir(input_path)
 
@@ -101,13 +102,11 @@ for file in files:
         time.sleep(1)
         pyautogui.click(button_x, button_y)
         
-        button_x, button_y = 412, 370
         time.sleep(sleeping_time)
-        pyautogui.click(button_x, button_y)
+        pyautogui.hotkey('enter')
         
-        button_x, button_y = 775, 575
         time.sleep(sleeping_time)
-        pyautogui.click(button_x, button_y)
+        pyautogui.hotkey('enter')
         
         time.sleep(5)
         
@@ -116,7 +115,20 @@ for file in files:
         pyautogui.click(button_x, button_y)
         
         number_of_signatures += 1
+    
 
 button_x, button_y = 640, 10
 time.sleep(sleeping_time)
 pyautogui.click(button_x, button_y)
+
+time.sleep(3)
+
+for file in files:
+    aux_file = file[:len(file)-4]+'-signed'*5+".pdf"
+    shutil.move(input_path+aux_file, "Salida/Firmado_"+file)
+
+files = os.popen(f'dir /b /s "{input_path}*-signed*"').read().splitlines()
+
+for file in files:
+    print("Eliminando "+file)
+    os.remove(file)
