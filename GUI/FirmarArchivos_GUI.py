@@ -20,7 +20,7 @@ def run_script():
             time.sleep(sleeping_time)
             pyautogui.hotkey('ctrl', 'v')
         
-        folder_path = r"Z:\Proyectos de programación\Python\Bolsa\Firmar\GUI\Entrada\\"
+        folder_path = r"Z:\Proyectos de programación\Python\Bolsa\Firmar\GUI\\"
         subfolders = [f.path for f in os.scandir(folder_path) if f.is_dir()]
         
         for subfolder in subfolders:
@@ -28,7 +28,10 @@ def run_script():
             partial_path = subfolder.split('\\')
             stockbroker = partial_path[-1]
             
-            input_path = fr"Z:\Proyectos de programación\Python\Bolsa\Firmar\GUI\Entrada\{stockbroker}\\"
+            file = open(folder_path+fr'{stockbroker}\{stockbroker}.txt')
+            password = file.readline()
+                        
+            input_path = folder_path+fr"{stockbroker}\Entrada\\"
             #input_path = r"S:\Entrada\\"
             
             files = os.listdir(input_path)
@@ -54,13 +57,14 @@ def run_script():
                     pyautogui.click(button_x, button_y)
                     
                     #copyPaste(r"Z:\Trámites\CRISTIAN ALFREDO ORELLANA CEPEDA 1724589617-180724215922.p12",300,380)
-                    copyPaste(fr"Z:\Proyectos de programación\Python\Bolsa\Firmar\GUI\Firmas\{stockbroker}.p12",300,380)
+                    copyPaste(folder_path+fr"{stockbroker}\{stockbroker}.p12",300,380)
                     
                     time.sleep(sleeping_time)
                     pyautogui.hotkey('enter')
                     
                     #copyPaste("JLVL881900va",200, 280)  #Coloca clave
-                    copyPaste("1375Probook",200, 280)  #Coloca clave
+                    
+                    copyPaste(password,200, 280)  #Coloca clave
                     
                     button_x, button_y = 400, 280   #Click en Buscar Documento
                     time.sleep(sleeping_time)
@@ -79,7 +83,8 @@ def run_script():
                     
                     time.sleep(5)
                     
-                    button_x, button_y = 990, 416   #Click en boton Aceptar de la pantalla emergente de advertencia de tamaño de pagina
+                    #button_x, button_y = 990, 416   #Click en boton Aceptar de la pantalla emergente de advertencia de tamaño de pagina
+                    button_x, button_y = 1250, 560
                     time.sleep(sleeping_time)
                     pyautogui.click(button_x, button_y)
                     
@@ -160,16 +165,16 @@ def run_script():
             
                 time.sleep(3)
             
-                shutil.move(input_path+file, "Z:/Proyectos de programación/Python/Bolsa/Firmar/GUI/Procesados/"+file)
+                shutil.move(input_path+file, folder_path+f"{stockbroker}/Procesados/"+file)
             
                 aux_file = file[:len(file)-4]+'-signed'*5+".pdf"
-                shutil.move(input_path+aux_file, f"Z:/Proyectos de programación/Python/Bolsa/Firmar/GUI/Salida/{stockbroker}/Firmado_"+file)  #Renombra el archivo colocando al inicio la palabra Firmado
+                shutil.move(input_path+aux_file, folder_path+f"{stockbroker}/Salida/Firmado_"+file)  #Renombra el archivo colocando al inicio la palabra Firmado
             
             #files = os.popen(f'dir /b /s "{input_path}*-signed*"').read().splitlines()  #Lee todos los archivos que tengan la palabra Signed
             files = os.listdir(input_path)
             
             for file in files:
-                shutil.move(input_path+file,  "Z:/Proyectos de programación/Python/Bolsa/Firmar/GUI/FirmadosParciales/"+file)
+                shutil.move(input_path+file,  folder_path+f"{stockbroker}/FirmadosParciales/"+file)
 
         messagebox.showinfo("Éxito", "Proceso completado exitosamente.")
     except Exception as e:
